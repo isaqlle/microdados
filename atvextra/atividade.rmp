@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.0.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.0.001" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.0.001" expanded="true" height="68" name="Read CSV" width="90" x="179" y="34">
+        <parameter key="csv_file" value="C:\Users\isaqu\Documents\microdados_enem_2024\microdados\FILTRO_RESULTADOS_VALE_SP.csv"/>
+        <parameter key="column_separators" value=";"/>
+        <parameter key="trim_lines" value="false"/>
+        <parameter key="multiline_text" value="false"/>
+        <parameter key="use_quotes" value="true"/>
+        <parameter key="quotes_character" value="&quot;"/>
+        <parameter key="escape_character" value="\"/>
+        <parameter key="skip_comments" value="true"/>
+        <parameter key="comment_characters" value="#"/>
+        <parameter key="starting_row" value="1"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="grouped_digits" value="false"/>
+        <parameter key="grouping_character" value=","/>
+        <parameter key="infinity_representation" value=""/>
+        <parameter key="date_format" value=""/>
+        <parameter key="use_header_row" value="true"/>
+        <parameter key="header_row" value="1"/>
+        <parameter key="first_row_as_names" value="true"/>
+        <list key="annotations"/>
+        <parameter key="time_zone" value="America/Sao_Paulo"/>
+        <parameter key="locale" value="English (United States)"/>
+        <parameter key="encoding" value="windows-1252"/>
+        <parameter key="read_all_values_as_polynominal" value="false"/>
+        <list key="data_set_meta_data_information">
+          <parameter key="0" value="CO_ESCOLA.true.real.attribute"/>
+          <parameter key="1" value="CO_MUNICIPIO_ESC.true.integer.attribute"/>
+          <parameter key="2" value="NO_MUNICIPIO_ESC.true.polynominal.attribute"/>
+          <parameter key="3" value="SG_UF_ESC.true.polynominal.attribute"/>
+          <parameter key="4" value="TP_DEPENDENCIA_ADM_ESC.true.real.attribute"/>
+          <parameter key="5" value="TP_LOCALIZACAO_ESC.true.real.attribute"/>
+          <parameter key="6" value="TP_PRESENCA_CN.true.integer.attribute"/>
+          <parameter key="7" value="TP_PRESENCA_CH.true.integer.attribute"/>
+          <parameter key="8" value="TP_PRESENCA_LC.true.integer.attribute"/>
+          <parameter key="9" value="TP_PRESENCA_MT.true.integer.attribute"/>
+          <parameter key="10" value="NU_NOTA_CN.true.real.attribute"/>
+          <parameter key="11" value="NU_NOTA_CH.true.real.attribute"/>
+          <parameter key="12" value="NU_NOTA_LC.true.real.attribute"/>
+          <parameter key="13" value="NU_NOTA_MT.true.real.attribute"/>
+          <parameter key="14" value="TP_LINGUA.true.integer.attribute"/>
+          <parameter key="15" value="TP_STATUS_REDACAO.true.real.attribute"/>
+          <parameter key="16" value="NU_NOTA_REDACAO.true.real.attribute"/>
+        </list>
+        <parameter key="read_not_matching_values_as_missings" value="false"/>
+      </operator>
+      <operator activated="true" class="filter_examples" compatibility="12.0.001" expanded="true" height="103" name="Filter Examples" width="90" x="313" y="34">
+        <parameter key="parameter_expression" value=""/>
+        <parameter key="condition_class" value="custom_filters"/>
+        <parameter key="invert_filter" value="false"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="NU_NOTA_REDACAO.is_not_missing."/>
+        </list>
+        <parameter key="filters_logic_and" value="true"/>
+        <parameter key="filters_check_metadata" value="true"/>
+      </operator>
+      <operator activated="true" class="numerical_to_polynominal" compatibility="12.0.001" expanded="true" height="82" name="Numerical to Polynominal" width="90" x="447" y="34">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="CO_ESCOLA"/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="numeric"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="real"/>
+        <parameter key="block_type" value="value_series"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_series_end"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+      </operator>
+      <operator activated="true" class="concurrency:loop_values" compatibility="12.0.001" expanded="true" height="82" name="Loop Values" width="90" x="581" y="34">
+        <parameter key="attribute" value="CO_ESCOLA"/>
+        <parameter key="iteration_macro" value="loop_value"/>
+        <parameter key="reuse_results" value="false"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="filter_examples" compatibility="12.0.001" expanded="true" height="103" name="Filter Examples (2)" width="90" x="112" y="34">
+            <parameter key="parameter_expression" value=""/>
+            <parameter key="condition_class" value="custom_filters"/>
+            <parameter key="invert_filter" value="false"/>
+            <list key="filters_list">
+              <parameter key="filters_entry_key" value="CO_ESCOLA.equals.%{loop_value}"/>
+            </list>
+            <parameter key="filters_logic_and" value="true"/>
+            <parameter key="filters_check_metadata" value="true"/>
+          </operator>
+          <operator activated="true" class="blending:sort" compatibility="12.0.001" expanded="true" height="82" name="Sort" width="90" x="246" y="34">
+            <list key="sort_by">
+              <parameter key="NU_NOTA_REDACAO" value="descending"/>
+            </list>
+          </operator>
+          <operator activated="true" class="filter_example_range" compatibility="12.0.001" expanded="true" height="82" name="Filter Example Range" width="90" x="371" y="85">
+            <parameter key="first_example" value="1"/>
+            <parameter key="last_example" value="30"/>
+            <parameter key="invert_filter" value="false"/>
+          </operator>
+          <connect from_port="input 1" to_op="Filter Examples (2)" to_port="example set input"/>
+          <connect from_op="Filter Examples (2)" from_port="example set output" to_op="Sort" to_port="example set input"/>
+          <connect from_op="Sort" from_port="example set output" to_op="Filter Example Range" to_port="example set input"/>
+          <connect from_op="Filter Example Range" from_port="example set output" to_port="output 1"/>
+          <portSpacing port="source_input 1" spacing="0"/>
+          <portSpacing port="source_input 2" spacing="0"/>
+          <portSpacing port="sink_output 1" spacing="0"/>
+          <portSpacing port="sink_output 2" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="append" compatibility="12.0.001" expanded="true" height="82" name="Append" width="90" x="715" y="34">
+        <parameter key="data_management" value="auto"/>
+        <parameter key="merge_type" value="all"/>
+      </operator>
+      <operator activated="true" class="aggregate" compatibility="12.0.001" expanded="true" height="82" name="Aggregate" width="90" x="849" y="34">
+        <parameter key="use_default_aggregation" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="default_aggregation_function" value="average"/>
+        <list key="aggregation_attributes">
+          <parameter key="NU_NOTA_REDACAO" value="average"/>
+        </list>
+        <parameter key="group_by_attributes" value="CO_ESCOLA"/>
+        <parameter key="count_all_combinations" value="false"/>
+        <parameter key="only_distinct" value="false"/>
+        <parameter key="ignore_missings" value="true"/>
+      </operator>
+      <operator activated="true" class="blending:sort" compatibility="12.0.001" expanded="true" height="82" name="Sort (2)" width="90" x="983" y="34">
+        <list key="sort_by">
+          <parameter key="average(NU_NOTA_REDACAO)" value="descending"/>
+        </list>
+      </operator>
+      <operator activated="true" class="filter_example_range" compatibility="12.0.001" expanded="true" height="82" name="Filter Example Range (2)" width="90" x="1117" y="34">
+        <parameter key="first_example" value="1"/>
+        <parameter key="last_example" value="30"/>
+        <parameter key="invert_filter" value="false"/>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Filter Examples" to_port="example set input"/>
+      <connect from_op="Filter Examples" from_port="example set output" to_op="Numerical to Polynominal" to_port="example set input"/>
+      <connect from_op="Numerical to Polynominal" from_port="example set output" to_op="Loop Values" to_port="input 1"/>
+      <connect from_op="Loop Values" from_port="output 1" to_op="Append" to_port="example set 1"/>
+      <connect from_op="Append" from_port="merged set" to_op="Aggregate" to_port="example set input"/>
+      <connect from_op="Aggregate" from_port="example set output" to_op="Sort (2)" to_port="example set input"/>
+      <connect from_op="Sort (2)" from_port="example set output" to_op="Filter Example Range (2)" to_port="example set input"/>
+      <connect from_op="Filter Example Range (2)" from_port="example set output" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+    </process>
+  </operator>
+</process>
